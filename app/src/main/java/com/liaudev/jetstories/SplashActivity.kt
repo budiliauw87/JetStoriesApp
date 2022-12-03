@@ -16,10 +16,13 @@ import kotlinx.coroutines.delay
 class SplashActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        /*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
             val splashScreen = installSplashScreen()
             splashScreen.setKeepOnScreenCondition { true }
-        }
+        }*/
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { true }
         super.onCreate(savedInstanceState)
         lifecycleScope.launchWhenCreated {
             delay(3000)

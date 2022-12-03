@@ -4,8 +4,10 @@
         <color android:color="@color/white" />
     </item>
     <item
-        android:width="80dp"
-        android:height="80dp"
+        android:top="50dp"
+        android:bottom="50dp"
+        android:left="50dp"
+        android:right="50dp"
         android:drawable="@drawable/ic_outline_library_books_24"
         android:gravity="center">
         <!-- if using image uncomment here -

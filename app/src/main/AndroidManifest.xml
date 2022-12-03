@@ -13,9 +13,9 @@
         android:theme="@style/Theme.JetStories"
         tools:targetApi="31">
         <activity
-            android:name=".SplashActivity"
+            android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/SplashScreenTheme">
+            android:theme="@style/Theme.JetStories">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,9 +25,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="true" />
     </application>
 
 </manifest>

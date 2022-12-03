@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.liaudev.jetstories'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.liaudev.jetstories"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -47,8 +47,8 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
     implementation "androidx.activity:activity-compose:$compose_activity_version"
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"

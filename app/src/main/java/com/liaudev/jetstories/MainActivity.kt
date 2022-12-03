@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.liaudev.jetstories.components.BottomBar
 import com.liaudev.jetstories.navigation.Screen
+import com.liaudev.jetstories.ui.screen.FavoriteScreen
 import com.liaudev.jetstories.ui.screen.HomeScreen
 import com.liaudev.jetstories.ui.theme.JetStoriesTheme
 
@@ -46,13 +47,13 @@ fun JetStoriesApp(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Home.route) {
-                HomeScreen("Home Screen")
+                HomeScreen("Home Screen",modifier)
             }
             composable(Screen.Favorite.route) {
-                HomeScreen("Favorite Screen")
+                FavoriteScreen("Favorite Screen")
             }
             composable(Screen.About.route) {
-                HomeScreen("About Screen")
+                FavoriteScreen("About Screen")
             }
         }
     }

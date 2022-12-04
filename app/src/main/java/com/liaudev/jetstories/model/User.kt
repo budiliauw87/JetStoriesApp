@@ -6,5 +6,9 @@ package com.liaudev.jetstories.model
  * budiliauw87.github.io
  * Budiliauw87@gmail.com
  */
-class UserItem {
-}
+data class User(
+    val userId: String,
+    val name: String,
+    val token: String,
+    val state: Boolean
+)

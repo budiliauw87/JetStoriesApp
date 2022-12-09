@@ -10,10 +10,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.liaudev.jetstories.components.StoryItem
+import com.liaudev.jetstories.di.Injector
+import com.liaudev.jetstories.di.ViewModelFactory
 import com.liaudev.jetstories.model.Story
+import com.liaudev.jetstories.ui.viewmodel.StoryViewModel
 import kotlinx.coroutines.delay
 
 /**
@@ -22,7 +26,12 @@ import kotlinx.coroutines.delay
  * Budiliauw87@gmail.com
  */
 @Composable
-fun HomeScreen(modifier: Modifier) {
+fun HomeScreen(
+    modifier: Modifier,
+    viewModel: StoryViewModel = viewModel(
+        factory = ViewModelFactory(Injector.provideRepository())
+    )
+) {
     var refreshing by remember { mutableStateOf(true) }
     val itemList = remember { mutableStateListOf<Story>() }
     LaunchedEffect(refreshing) {

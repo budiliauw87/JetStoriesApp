@@ -8,9 +8,8 @@ import com.liaudev.jetstories.data.network.ApiService
  * Github https://github.com/budiliauw87
  */
 class StoryRepository(private val apiService: ApiService) {
+    suspend fun getStories(token: String,page: Int, size: Int) = apiService.getStories(token, page, size)
     companion object {
-        private const val LOGIN = "Login"
-        private const val SIGNUP = "SignUp"
         @Volatile
         private var INSTANCE: StoryRepository? = null
         fun getInstance(

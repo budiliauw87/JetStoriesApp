@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,16 +44,7 @@ fun HomeScreen(
             refreshing = false
         }
     }
-    for (i in 1..6) {
-        val item = Story(
-            "https://raw.githubusercontent.com/dicodingacademy/assets/main/android_compose_academy/pahlawan/1.jpg",
-            "name here $i",
-            "2022-12-04 00:00:00",
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt  $i",
-            "id$i", 0.0, 0.0
-        )
-        itemList.add(item)
-    }
+    addDummy(itemList)
     SwipeRefresh(
         state = rememberSwipeRefreshState(refreshing),
         onRefresh = {
@@ -82,4 +74,17 @@ fun HomeScreen(
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(modifier = Modifier)
+}
+
+fun addDummy(itemList: SnapshotStateList<Story>) {
+    for (i in 1..6) {
+        val item = Story(
+            "https://raw.githubusercontent.com/dicodingacademy/assets/main/android_compose_academy/pahlawan/1.jpg",
+            "name here $i",
+            "2022-12-04 00:00:00",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt  $i",
+            "id$i", 0.0, 0.0
+        )
+        itemList.add(item)
+    }
 }

@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -64,6 +65,11 @@ dependencies {
     implementation "io.coil-kt:coil-compose:$coil_compose_version"
     implementation "androidx.core:core-splashscreen:$core_splashscreen_version"
     implementation "com.google.accompanist:accompanist-swiperefresh:0.19.0"
+    //DataStore
+    implementation "androidx.datastore:datastore-preferences-core:1.0.0"
+    //paging
+    implementation "androidx.paging:paging-runtime:3.1.1"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha17"
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

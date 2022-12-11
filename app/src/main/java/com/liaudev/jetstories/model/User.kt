@@ -10,5 +10,5 @@ data class User(
     val userId: String,
     val name: String,
     val token: String,
-    val state: Boolean
+    val islogin: Boolean
 )

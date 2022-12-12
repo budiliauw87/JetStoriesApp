@@ -2,10 +2,15 @@ package com.liaudev.jetstories.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.liaudev.jetstories.data.local.AppPreferences
 import com.liaudev.jetstories.data.network.ApiService
+import com.liaudev.jetstories.data.network.StoryPagingSource
 import com.liaudev.jetstories.data.network.response.LoginRequest
 import com.liaudev.jetstories.data.network.response.LoginResponse
+import com.liaudev.jetstories.model.Story
 import com.liaudev.jetstories.model.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -19,8 +24,16 @@ class StoryRepository(
     private val apiService: ApiService,
     private val pref: AppPreferences
 ) {
-    suspend fun getStories(token: String, page: Int, size: Int) =
-        apiService.getStories(token, page, size)
+    fun getStories(): Flow<PagingData<Story>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5
+            ),
+            pagingSourceFactory = {
+                StoryPagingSource(apiService, pref)
+            }
+        ).flow
+    }
 
     fun getUserData(): LiveData<User> {
         return pref.getUser().asLiveData()

@@ -1,21 +1,23 @@
 package com.liaudev.jetstories.ui.screen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.liaudev.jetstories.components.StoryItem
-import com.liaudev.jetstories.model.Story
-import kotlinx.coroutines.delay
+import com.liaudev.jetstories.ui.viewmodel.StoryViewModel
 
 /**
  * Created by Budiliauw87 on 2022-11-29.
@@ -25,60 +27,54 @@ import kotlinx.coroutines.delay
 @Composable
 fun HomeScreen(
     modifier: Modifier,
-
+    viewModel: StoryViewModel,
 ) {
-    var refreshing by remember { mutableStateOf(true) }
-    val itemList = remember { mutableStateListOf<Story>() }
-    LaunchedEffect(refreshing) {
-        if (refreshing) {
-            if (itemList.size > 0) {
-                itemList.clear()
-            }
-            delay(2000)
-            refreshing = false
-        }
-    }
-    addDummy(itemList)
+    val lazyPagingItems = viewModel.storiesPager.collectAsLazyPagingItems()
+    val state: LazyListState = rememberLazyListState()
+
     SwipeRefresh(
-        state = rememberSwipeRefreshState(refreshing),
+        state = rememberSwipeRefreshState((lazyPagingItems.loadState.refresh is LoadState.Loading && lazyPagingItems.itemCount > 0)),
         onRefresh = {
-            refreshing = true
-        },
+            lazyPagingItems.refresh() },
     ) {
-        if (refreshing) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = MaterialTheme.colors.background)
-            )
-        } else {
-            LazyColumn {
-                items(itemList) {
+        LazyColumn(
+            state = state,
+            contentPadding = PaddingValues(10.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
+        )
+        {
+            items(items = lazyPagingItems) { item ->
+                item?.let {
                     StoryItem(it, modifier)
                 }
             }
+            if (lazyPagingItems.loadState.append is LoadState.Loading) {
+                //load status of the next page
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
+                    ) {
+                        CircularProgressIndicator(modifier = Modifier.align(alignment = Alignment.Center))
+                    }
+                }
+            }
         }
-
-    }
-
-
-}
-
-@Preview(showBackground = true, device = Devices.PIXEL_4)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen(modifier = Modifier)
-}
-
-fun addDummy(itemList: SnapshotStateList<Story>) {
-    for (i in 1..6) {
-        val item = Story(
-            "https://raw.githubusercontent.com/dicodingacademy/assets/main/android_compose_academy/pahlawan/1.jpg",
-            "name here $i",
-            "2022-12-04 00:00:00",
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt  $i",
-            "id$i", 0.0, 0.0
-        )
-        itemList.add(item)
+        if (lazyPagingItems.loadState.refresh is LoadState.Loading) {
+            if (lazyPagingItems.itemCount == 0) {//loading status when the first response page is loaded
+                Box(modifier = Modifier.fillMaxSize()) {
+                    CircularProgressIndicator(modifier = Modifier.align(alignment = Alignment.Center))
+                }
+            }
+        } else if (lazyPagingItems.loadState.refresh is LoadState.Error) {
+            //Load failed error page
+            Box(modifier = Modifier.fillMaxSize()) {
+                Button(modifier = Modifier.align(alignment = Alignment.Center),
+                    onClick = { lazyPagingItems.refresh() }) {
+                    Text(text = "Loading failed! Please try again")
+                }
+            }
+        }
     }
 }

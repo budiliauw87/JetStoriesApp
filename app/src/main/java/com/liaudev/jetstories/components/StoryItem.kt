@@ -28,6 +28,7 @@ import com.liaudev.jetstories.model.Story
 
 @Composable
 fun StoryItem(item :Story,modifier:Modifier){
+    val initialName = item.name?.firstOrNull()?.toString()?.uppercase() ?: "?"
     Card(
         elevation = 5.dp,
         modifier = Modifier.padding(0.dp,0.dp,0.dp,8.dp)
@@ -42,7 +43,7 @@ fun StoryItem(item :Story,modifier:Modifier){
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "A",
+                    text = initialName,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colors.surface,

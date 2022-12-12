@@ -90,7 +90,7 @@ fun JetStoriesApp(
         ) {
             composable(Screen.Home.route) {
                 stateTitle.value = "Home"
-                HomeScreen(modifier)
+                HomeScreen(modifier,viewModel)
             }
             composable(Screen.Favorite.route) {
                 stateTitle.value = "Favorite"

@@ -3,6 +3,7 @@ package com.liaudev.jetstories.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.liaudev.jetstories.data.StoryRepository
 import com.liaudev.jetstories.data.network.response.LoginResponse
 import com.liaudev.jetstories.model.User
@@ -25,7 +26,6 @@ class StoryViewModel(private val repository: StoryRepository) : ViewModel() {
 
     fun getUser(): LiveData<User> = repository.getUserData()
 
-    //fun login(email: String, password: String) = repository.login(email,password)
     fun login(email: String, password: String) {
         viewModelScope.launch {
             repository.login(email, password).catch {
@@ -44,11 +44,13 @@ class StoryViewModel(private val repository: StoryRepository) : ViewModel() {
         }
     }
 
-     fun logOut() {
+    fun logOut() {
         viewModelScope.launch {
             val user = User("", "", "", false)
             repository.saveUser(user)
 
         }
     }
+
+    val storiesPager = repository.getStories().cachedIn(viewModelScope)
 }

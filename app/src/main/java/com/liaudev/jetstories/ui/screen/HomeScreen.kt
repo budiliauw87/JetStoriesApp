@@ -11,14 +11,10 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.liaudev.jetstories.components.StoryItem
-import com.liaudev.jetstories.di.Injector
-import com.liaudev.jetstories.di.ViewModelFactory
 import com.liaudev.jetstories.model.Story
-import com.liaudev.jetstories.ui.viewmodel.StoryViewModel
 import kotlinx.coroutines.delay
 
 /**
@@ -29,15 +25,13 @@ import kotlinx.coroutines.delay
 @Composable
 fun HomeScreen(
     modifier: Modifier,
-    viewModel: StoryViewModel = viewModel(
-        factory = ViewModelFactory(Injector.provideRepository())
-    )
+
 ) {
     var refreshing by remember { mutableStateOf(true) }
     val itemList = remember { mutableStateListOf<Story>() }
     LaunchedEffect(refreshing) {
         if (refreshing) {
-            if(itemList.size > 0){
+            if (itemList.size > 0) {
                 itemList.clear()
             }
             delay(2000)
@@ -51,20 +45,20 @@ fun HomeScreen(
             refreshing = true
         },
     ) {
-        if(refreshing){
+        if (refreshing) {
             Box(
-                modifier= Modifier
+                modifier = Modifier
                     .fillMaxSize()
-                    .background( color = MaterialTheme.colors.background )
+                    .background(color = MaterialTheme.colors.background)
             )
-        }else{
+        } else {
             LazyColumn {
                 items(itemList) {
                     StoryItem(it, modifier)
                 }
             }
         }
-        
+
     }
 
 

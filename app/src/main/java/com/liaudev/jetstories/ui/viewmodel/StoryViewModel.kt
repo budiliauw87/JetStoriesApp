@@ -1,7 +1,9 @@
 package com.liaudev.jetstories.ui.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.liaudev.jetstories.data.StoryRepository
+import com.liaudev.jetstories.model.User
 
 /**
  * Created by Budiman on 09/12/2022.
@@ -9,5 +11,5 @@ import com.liaudev.jetstories.data.StoryRepository
  * Github https://github.com/budiliauw87
  */
 class StoryViewModel (private val repository: StoryRepository): ViewModel() {
-
+    fun getUser(): LiveData<User> = repository.getUserData()
 }

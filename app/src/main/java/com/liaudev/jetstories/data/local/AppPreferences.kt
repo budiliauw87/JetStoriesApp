@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.map
  * budiliauw87.github.io
  * Budiliauw87@gmail.com
  */
+
 class AppPreferences private constructor(private val dataStore: DataStore<Preferences>) {
     companion object {
         private val ID_KEY = stringPreferencesKey("userId")

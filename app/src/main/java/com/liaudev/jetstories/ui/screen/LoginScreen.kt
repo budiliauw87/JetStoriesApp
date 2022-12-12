@@ -2,6 +2,8 @@ package com.liaudev.jetstories.ui.screen
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,8 +23,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.liaudev.jetstories.MainActivity
 import com.liaudev.jetstories.R
+import com.liaudev.jetstories.di.Injector
+import com.liaudev.jetstories.di.ViewModelFactory
+import com.liaudev.jetstories.state.UiState
+import com.liaudev.jetstories.ui.viewmodel.StoryViewModel
 
 
 /**
@@ -31,20 +40,30 @@ import com.liaudev.jetstories.R
  * Budiliauw87@gmail.com
  */
 @Composable
-fun LoginScreen(modifier: Modifier) {
+fun LoginScreen(
+    modifier: Modifier,
+    navController: NavHostController = rememberNavController(),
+    viewModel: StoryViewModel = viewModel(
+        factory = ViewModelFactory(Injector.provideRepository(LocalContext.current))
+    )
+) {
     var emailText by remember { mutableStateOf("") }
-    var passwordText by remember { mutableStateOf("") }
     var isErrorEmail by remember { mutableStateOf(false) }
-    var isErrorPasword by remember { mutableStateOf(false) }
+
+    var passwordText by remember { mutableStateOf("") }
+    var isErrorPassword by remember { mutableStateOf(false) }
+
+    var isLoading by remember { mutableStateOf(false) }
     val mContext = LocalContext.current as Activity
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(color = Color.White)
             .padding(16.dp, 24.dp, 16.dp, 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -67,8 +86,12 @@ fun LoginScreen(modifier: Modifier) {
                     contentDescription = "emailIcon"
                 )
             },
-            isError = true,
-            onValueChange = { emailText = it },
+            isError = isErrorEmail,
+
+            onValueChange = {
+                emailText = it
+                isErrorEmail = emailText.length == 0
+            },
             label = { Text(text = "Email") },
             singleLine = true,
             placeholder = { Text(text = "Masukan Email") },
@@ -76,6 +99,7 @@ fun LoginScreen(modifier: Modifier) {
                 .fillMaxWidth()
                 .padding(top = 24.dp)
         )
+
         OutlinedTextField(
             value = passwordText,
             leadingIcon = {
@@ -85,7 +109,11 @@ fun LoginScreen(modifier: Modifier) {
                 )
             },
             singleLine = true,
-            onValueChange = { passwordText = it },
+            isError = isErrorPassword,
+            onValueChange = {
+                passwordText = it
+                isErrorPassword = passwordText.length == 0
+            },
             label = { Text(text = "Kata sandi") },
             placeholder = { Text(text = "Masukan Kata sandi") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -98,18 +126,35 @@ fun LoginScreen(modifier: Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
-            enabled = true,
+            enabled = !isLoading,
             onClick = {
-                login(mContext,emailText,passwordText)
+                isErrorEmail = emailText.length == 0
+                isErrorPassword = passwordText.length == 0
+                isLoading = (!isErrorEmail && !isErrorPassword)
+
             }) {
             Text(text = "Login")
         }
+        if (isLoading){
+            viewModel.uiStateLogin.collectAsState(initial = UiState.Loading).value.let { uiState ->
+                when (uiState) {
+                    is UiState.Loading -> {
+                        Log.e("LOGINSCREEN","LOADING")
+                        viewModel.login(emailText,passwordText)
+                    }
+                    is UiState.Success -> {
+                        Log.e("LOGINSCREEN","SUCESSS $uiState.data.toString()")
+                        Toast.makeText(mContext, "Berhasil login", Toast.LENGTH_SHORT).show()
+                        mContext.startActivity(Intent(mContext, MainActivity::class.java))
+                        mContext.finish()
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
-        ) {
+                    }
+                    is UiState.Error -> {
+                        Toast.makeText(mContext, "Gagal login", Toast.LENGTH_SHORT).show()
+                        isLoading = false
+                    }
+                }
+            }
 
         }
 
@@ -117,10 +162,6 @@ fun LoginScreen(modifier: Modifier) {
     }
 }
 
-fun login(activity: Activity, email: String, password: String) {
-    activity.startActivity(Intent(activity, MainActivity::class.java))
-    activity?.finish()
-}
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable

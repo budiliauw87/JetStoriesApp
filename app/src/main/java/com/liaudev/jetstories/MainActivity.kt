@@ -1,13 +1,15 @@
 package com.liaudev.jetstories
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,15 +53,30 @@ fun JetStoriesApp(
     )
 ) {
     val stateTitle = remember { mutableStateOf("Home") }
+    val mContext = LocalContext.current as Activity
     Scaffold(
         topBar = {
-            TopAppBar(title = {
-                Text(
-                    text = stateTitle.value,
-                    color = Color.White,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            })
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stateTitle.value,
+                        color = Color.White,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                actions = {
+                    IconButton(onClick = {
+                        viewModel.logOut()
+                        mContext.startActivity(Intent(mContext, AuthActivity::class.java))
+                        mContext.finish()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ExitToApp,
+                            contentDescription = "Open Options"
+                        )
+                    }
+                }
+            )
         },
         bottomBar = {
             BottomBar(navController)

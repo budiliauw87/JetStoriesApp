@@ -4,7 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.liaudev.jetstories.data.local.AppPreferences
 import com.liaudev.jetstories.data.network.ApiService
+import com.liaudev.jetstories.data.network.response.LoginRequest
+import com.liaudev.jetstories.data.network.response.LoginResponse
 import com.liaudev.jetstories.model.User
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 /**
  * Created by Budiman on 09/12/2022.
@@ -22,6 +26,16 @@ class StoryRepository(
         return pref.getUser().asLiveData()
     }
 
+    suspend fun login(email: String, password: String): Flow<LoginResponse> {
+        return flow {
+            val response = apiService.loginUser(LoginRequest(email, password))
+            emit(response)
+        }
+
+    }
+    suspend fun saveUser(user: User) {
+        pref.saveUser(user)
+    }
     companion object {
         @Volatile
         private var INSTANCE: StoryRepository? = null

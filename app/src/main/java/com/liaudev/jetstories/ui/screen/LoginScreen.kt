@@ -25,11 +25,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.liaudev.jetstories.MainActivity
 import com.liaudev.jetstories.R
 import com.liaudev.jetstories.data.network.response.LoginResponse
 import com.liaudev.jetstories.di.Injector
 import com.liaudev.jetstories.di.ViewModelFactory
+import com.liaudev.jetstories.navigation.Screen
 import com.liaudev.jetstories.state.UiState
 import com.liaudev.jetstories.ui.viewmodel.AuthViewModel
 
@@ -41,13 +43,8 @@ import com.liaudev.jetstories.ui.viewmodel.AuthViewModel
  */
 @Composable
 fun LoginScreen(
-    viewModel: AuthViewModel = viewModel(
-        factory = ViewModelFactory(
-            Injector.provideRepository(
-                LocalContext.current
-            )
-        )
-    )
+    navController: NavHostController,
+    viewModel: AuthViewModel
 ) {
 
     val mContext = LocalContext.current as Activity
@@ -68,7 +65,7 @@ fun LoginScreen(
                 Toast.makeText(mContext, "Gagal login", Toast.LENGTH_SHORT).show()
             }
         }
-        LoginContent(viewModel, uiState)
+        LoginContent(viewModel, uiState,navController)
     }
     /*
    */
@@ -77,7 +74,8 @@ fun LoginScreen(
 @Composable
 fun LoginContent(
     viewModel: AuthViewModel,
-    uiState: UiState<LoginResponse>
+    uiState: UiState<LoginResponse>,
+    navController: NavHostController,
 ) {
     var emailText by remember { mutableStateOf("") }
     var isErrorEmail by remember { mutableStateOf(false) }
@@ -178,6 +176,20 @@ fun LoginContent(
             }) {
             Text(text = "Login")
         }
+        Text(
+            stringResource(
+                R.string.dont_have_account
+            ),
+            style = MaterialTheme.typography.body2,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            enabled = true,
+            onClick = {navController.navigate(Screen.Register.route)}) {
+            Text(text = "Register")
+        }
     }
-
 }

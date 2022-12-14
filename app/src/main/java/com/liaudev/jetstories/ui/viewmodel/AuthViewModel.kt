@@ -4,16 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.liaudev.jetstories.data.StoryRepository
+import com.liaudev.jetstories.data.network.response.BaseResponse
 import com.liaudev.jetstories.data.network.response.LoginResponse
-import com.liaudev.jetstories.data.network.response.LoginResult
 import com.liaudev.jetstories.model.User
 import com.liaudev.jetstories.state.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.concurrent.schedule
 
 /**
  * Created by Budiman on 14/12/2022.
@@ -23,6 +21,10 @@ import kotlin.concurrent.schedule
 class AuthViewModel(private val repository: StoryRepository) : ViewModel() {
     private val _uiStateLogin = MutableStateFlow<UiState<LoginResponse>>(UiState.Idle)
     val uiStateLogin: StateFlow<UiState<LoginResponse>> = _uiStateLogin
+
+    private val _uiStateRegister = MutableStateFlow<UiState<BaseResponse>>(UiState.Idle)
+    val uiStateRegister: StateFlow<UiState<BaseResponse>> = _uiStateRegister
+
     fun login(email: String, password: String) {
         _uiStateLogin.value = UiState.Loading
         viewModelScope.launch {
@@ -40,15 +42,19 @@ class AuthViewModel(private val repository: StoryRepository) : ViewModel() {
             }
         }
     }
-    fun logOut() {
-        viewModelScope.launch {
-            val user = User("", "", "", false)
-            repository.saveUser(user)
-        }
-    }
 
     fun getUser(): LiveData<User> = repository.getUserData()
 
+    fun register(username: String, email: String, password: String) {
+        _uiStateRegister.value = UiState.Loading
+        viewModelScope.launch {
+            repository.register(username, email, password).catch {
+                _uiStateRegister.value = UiState.Error(it.message.toString())
+            }.collect {
+                _uiStateRegister.value = UiState.Success(it)
+            }
+        }
+    }
     /*
     fun testerFun() {
         _uiStateLogin.value = UiState.Loading

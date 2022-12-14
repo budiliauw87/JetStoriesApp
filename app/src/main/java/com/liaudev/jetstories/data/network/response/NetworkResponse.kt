@@ -25,3 +25,8 @@ data class LoginResult(
     val name: String?,
     val token: String?
 )
+
+data class BaseResponse(
+    val error: Boolean?,
+    val message: String?
+)

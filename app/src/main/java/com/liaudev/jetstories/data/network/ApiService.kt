@@ -1,8 +1,6 @@
 package com.liaudev.jetstories.data.network
 
-import com.liaudev.jetstories.data.network.response.LoginRequest
-import com.liaudev.jetstories.data.network.response.LoginResponse
-import com.liaudev.jetstories.data.network.response.StoryResponse
+import com.liaudev.jetstories.data.network.response.*
 import retrofit2.http.*
 
 /**
@@ -22,4 +20,9 @@ interface ApiService {
     suspend fun loginUser(
         @Body request: LoginRequest
     ): LoginResponse
+
+    @POST("register")
+    suspend fun registerUser(
+        @Body requestBody: RegisterRequest
+    ): BaseResponse
 }

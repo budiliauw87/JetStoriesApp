@@ -8,8 +8,10 @@ import androidx.paging.PagingData
 import com.liaudev.jetstories.data.local.AppPreferences
 import com.liaudev.jetstories.data.network.ApiService
 import com.liaudev.jetstories.data.network.StoryPagingSource
+import com.liaudev.jetstories.data.network.response.BaseResponse
 import com.liaudev.jetstories.data.network.response.LoginRequest
 import com.liaudev.jetstories.data.network.response.LoginResponse
+import com.liaudev.jetstories.data.network.response.RegisterRequest
 import com.liaudev.jetstories.model.Story
 import com.liaudev.jetstories.model.User
 import kotlinx.coroutines.flow.Flow
@@ -46,9 +48,19 @@ class StoryRepository(
         }
 
     }
+
+    suspend fun register(username: String, email: String, password: String): Flow<BaseResponse> {
+        return flow {
+            val response = apiService.registerUser(RegisterRequest(username, email, password))
+            emit(response)
+        }
+
+    }
+
     suspend fun saveUser(user: User) {
         pref.saveUser(user)
     }
+
     companion object {
         @Volatile
         private var INSTANCE: StoryRepository? = null

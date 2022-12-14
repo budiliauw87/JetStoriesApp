@@ -17,7 +17,7 @@ class AuthActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             JetStoriesTheme {
-                LoginScreen(modifier = Modifier)
+                LoginScreen()
             }
         }
     }

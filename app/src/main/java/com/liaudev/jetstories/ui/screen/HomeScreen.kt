@@ -28,6 +28,7 @@ import com.liaudev.jetstories.ui.viewmodel.StoryViewModel
 fun HomeScreen(
     modifier: Modifier,
     viewModel: StoryViewModel,
+    navigateToDetail: (String) -> Unit,
 ) {
     val lazyPagingItems = viewModel.storiesPager.collectAsLazyPagingItems()
     val state: LazyListState = rememberLazyListState()
@@ -38,8 +39,7 @@ fun HomeScreen(
         LazyColumn(Modifier.fillMaxSize()) {
             items(items = lazyPagingItems) { item ->
                 item?.let {
-
-                    StoryItem(it, modifier)
+                    StoryItem(it, modifier,navigateToDetail)
                 }
             }
 
@@ -66,6 +66,6 @@ fun HomeScreen(
         }
         PullRefreshIndicator(refreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
     }
-
-
 }
+
+

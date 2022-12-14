@@ -15,23 +15,23 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.liaudev.jetstories.MainActivity
 import com.liaudev.jetstories.R
+import com.liaudev.jetstories.data.network.response.LoginResponse
 import com.liaudev.jetstories.di.Injector
 import com.liaudev.jetstories.di.ViewModelFactory
 import com.liaudev.jetstories.state.UiState
-import com.liaudev.jetstories.ui.viewmodel.StoryViewModel
+import com.liaudev.jetstories.ui.viewmodel.AuthViewModel
 
 
 /**
@@ -41,22 +41,61 @@ import com.liaudev.jetstories.ui.viewmodel.StoryViewModel
  */
 @Composable
 fun LoginScreen(
-    modifier: Modifier,
-    navController: NavHostController = rememberNavController(),
-    viewModel: StoryViewModel = viewModel(
-        factory = ViewModelFactory(Injector.provideRepository(LocalContext.current))
+    viewModel: AuthViewModel = viewModel(
+        factory = ViewModelFactory(
+            Injector.provideRepository(
+                LocalContext.current
+            )
+        )
     )
+) {
+
+    val mContext = LocalContext.current as Activity
+    viewModel.uiStateLogin.collectAsState().value.let { uiState ->
+        when (uiState) {
+            is UiState.Idle -> {
+                Log.e("IDLE", "IDLE")
+            }
+            is UiState.Loading -> {
+                Log.e("LOGINSCREEN", "LOADING")
+            }
+            is UiState.Success -> {
+                Toast.makeText(mContext, "Berhasil login", Toast.LENGTH_SHORT).show()
+                mContext.startActivity(Intent(mContext, MainActivity::class.java))
+                mContext.finish()
+            }
+            is UiState.Error -> {
+                Toast.makeText(mContext, "Gagal login", Toast.LENGTH_SHORT).show()
+            }
+        }
+        LoginContent(viewModel, uiState)
+    }
+    /*
+   */
+}
+
+@Composable
+fun LoginContent(
+    viewModel: AuthViewModel,
+    uiState: UiState<LoginResponse>
 ) {
     var emailText by remember { mutableStateOf("") }
     var isErrorEmail by remember { mutableStateOf(false) }
-
     var passwordText by remember { mutableStateOf("") }
     var isErrorPassword by remember { mutableStateOf(false) }
-
     var isLoading by remember { mutableStateOf(false) }
-    val mContext = LocalContext.current as Activity
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+    when (uiState) {
+        is UiState.Loading -> {
+            isLoading = true
+        }
+        else -> {
+            isLoading = false
+        }
+    }
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(color = Color.White)
             .padding(16.dp, 24.dp, 16.dp, 16.dp),
@@ -98,6 +137,7 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp)
+                .focusRequester(focusRequester)
         )
 
         OutlinedTextField(
@@ -120,6 +160,7 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp)
+                .focusRequester(focusRequester)
         )
 
         Button(
@@ -128,43 +169,15 @@ fun LoginScreen(
                 .padding(top = 16.dp),
             enabled = !isLoading,
             onClick = {
-                isErrorEmail = emailText.length == 0
                 isErrorPassword = passwordText.length == 0
-                isLoading = (!isErrorEmail && !isErrorPassword)
-
+                isErrorEmail = emailText.length == 0
+                if (!isErrorEmail && !isErrorPassword) {
+                    focusManager.clearFocus()  //clear focus
+                    viewModel.login(emailText, passwordText)
+                }
             }) {
             Text(text = "Login")
         }
-        if (isLoading){
-            viewModel.uiStateLogin.collectAsState(initial = UiState.Loading).value.let { uiState ->
-                when (uiState) {
-                    is UiState.Loading -> {
-                        Log.e("LOGINSCREEN","LOADING")
-                        viewModel.login(emailText,passwordText)
-                    }
-                    is UiState.Success -> {
-                        Log.e("LOGINSCREEN","SUCESSS $uiState.data.toString()")
-                        Toast.makeText(mContext, "Berhasil login", Toast.LENGTH_SHORT).show()
-                        mContext.startActivity(Intent(mContext, MainActivity::class.java))
-                        mContext.finish()
-
-                    }
-                    is UiState.Error -> {
-                        Toast.makeText(mContext, "Gagal login", Toast.LENGTH_SHORT).show()
-                        isLoading = false
-                    }
-                }
-            }
-
-        }
-
-
     }
-}
 
-
-@Preview(showBackground = true, device = Devices.PIXEL_4)
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen(modifier = Modifier)
 }

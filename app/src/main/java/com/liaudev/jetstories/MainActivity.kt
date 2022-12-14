@@ -20,14 +20,18 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.google.gson.Gson
 import com.liaudev.jetstories.components.BottomBar
 import com.liaudev.jetstories.di.Injector
 import com.liaudev.jetstories.di.ViewModelFactory
 import com.liaudev.jetstories.navigation.Screen
 import com.liaudev.jetstories.ui.screen.AboutScreen
+import com.liaudev.jetstories.ui.screen.DetailScreen
 import com.liaudev.jetstories.ui.screen.FavoriteScreen
 import com.liaudev.jetstories.ui.screen.HomeScreen
 import com.liaudev.jetstories.ui.theme.JetStoriesTheme
@@ -79,7 +83,7 @@ fun JetStoriesApp(
             )
         },
         bottomBar = {
-            BottomBar(navController)
+            if(stateTitle.value!="Detail")BottomBar(navController)
         },
         modifier = modifier
     ) { innerPadding ->
@@ -90,7 +94,9 @@ fun JetStoriesApp(
         ) {
             composable(Screen.Home.route) {
                 stateTitle.value = "Home"
-                HomeScreen(modifier,viewModel)
+                HomeScreen(modifier, viewModel, navigateToDetail = { storyId ->
+                    navController.navigate(Screen.DetailStory.createRoute(storyId))
+                })
             }
             composable(Screen.Favorite.route) {
                 stateTitle.value = "Favorite"
@@ -99,6 +105,19 @@ fun JetStoriesApp(
             composable(Screen.About.route) {
                 stateTitle.value = "About"
                 AboutScreen(modifier)
+            }
+            composable(
+                route = Screen.DetailStory.route,
+                arguments = listOf(navArgument("storyId") { type = NavType.StringType }),
+            ) {
+                val id = it.arguments?.getString("storyId") ?: ""
+                stateTitle.value = "Detail"
+                DetailScreen(
+                    storyId = id,
+                    navigateBack = {
+                        navController.navigateUp()
+                    }
+                )
             }
         }
     }

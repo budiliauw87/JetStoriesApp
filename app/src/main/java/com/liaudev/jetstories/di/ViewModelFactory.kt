@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.liaudev.jetstories.data.StoryRepository
 import com.liaudev.jetstories.data.local.AppPreferences
 import com.liaudev.jetstories.data.network.ApiConfig
+import com.liaudev.jetstories.ui.viewmodel.AuthViewModel
 import com.liaudev.jetstories.ui.viewmodel.StoryViewModel
 
 /**
@@ -17,11 +18,14 @@ import com.liaudev.jetstories.ui.viewmodel.StoryViewModel
  * Github https://github.com/budiliauw87
  */
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings_jetstories")
+
 class ViewModelFactory(private val repo: StoryRepository) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StoryViewModel::class.java)) {
             return StoryViewModel(repo) as T
+        } else if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
+            return AuthViewModel(repo) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

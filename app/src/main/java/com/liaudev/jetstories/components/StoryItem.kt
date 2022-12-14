@@ -13,8 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.liaudev.jetstories.model.Story
@@ -27,18 +25,24 @@ import com.liaudev.jetstories.model.Story
  */
 
 @Composable
-fun StoryItem(item :Story,modifier:Modifier){
+fun StoryItem(
+    item: Story,
+    modifier: Modifier,
+    navigateToDetail: (String) -> Unit,
+) {
     val initialName = item.name?.firstOrNull()?.toString()?.uppercase() ?: "?"
     Card(
         elevation = 5.dp,
-        modifier = Modifier.padding(0.dp,0.dp,0.dp,8.dp)
-    ){
+        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .clickable {  }
-        ){
+                .clickable {
+                    navigateToDetail(item.id)
+                }
+        ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -55,15 +59,20 @@ fun StoryItem(item :Story,modifier:Modifier){
                 Spacer(modifier = Modifier.width(8.dp))
                 Column(
                     modifier = Modifier.fillMaxWidth()
-                ){
-                    Text(text = item.name,style = MaterialTheme.typography.body1, maxLines = 1)
-                    Text(text = item.createdAt, maxLines = 1,style = MaterialTheme.typography.caption)
+                ) {
+                    Text(text = item.name, style = MaterialTheme.typography.body1, maxLines = 1)
+                    Text(
+                        text = item.createdAt,
+                        maxLines = 1,
+                        style = MaterialTheme.typography.caption
+                    )
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 modifier = modifier.fillMaxWidth(),
-                text = item.description)
+                text = item.description
+            )
             Spacer(modifier = Modifier.height(8.dp))
             AsyncImage(
                 model = item.photoUrl,
@@ -75,11 +84,4 @@ fun StoryItem(item :Story,modifier:Modifier){
             )
         }
     }
-}
-
-@Preview(showBackground = true, device = Devices.PIXEL_4)
-@Composable
-fun StoryItemPreview() {
-    val item = Story("","name here","2022-12-04 00:00:00","decreption","id",0.0,0.0)
-    StoryItem(item, modifier = Modifier)
 }

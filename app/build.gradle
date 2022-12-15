@@ -5,6 +5,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('D:\\Android\\StudioProjects\\JetStoriesApp\\keystore\\jetstory_keystore.jks')
+            storePassword '123456'
+            keyAlias 'jetstories'
+            keyPassword '123456'
+        }
+    }
     namespace 'com.liaudev.jetstories'
     compileSdk 33
 

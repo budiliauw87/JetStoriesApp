@@ -30,3 +30,9 @@ data class BaseResponse(
     val error: Boolean?,
     val message: String?
 )
+
+data class DetailResponse(
+    val error: Boolean?,
+    val message: String?,
+    val story: Story?
+)

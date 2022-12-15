@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.google.gson.Gson
 import com.liaudev.jetstories.model.Story
 
 
@@ -40,7 +41,10 @@ fun StoryItem(
                 .fillMaxWidth()
                 .padding(16.dp)
                 .clickable {
-                    navigateToDetail(item.id)
+                    val modifedUrl = item.photoUrl.replace("https://story-api.dicoding.dev/images/stories/","")
+                    item.photoUrl = modifedUrl
+                    val jsonItem = Gson().toJson(item)
+                    navigateToDetail(jsonItem)
                 }
         ) {
             Row(
@@ -85,3 +89,4 @@ fun StoryItem(
         }
     }
 }
+

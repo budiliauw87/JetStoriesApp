@@ -31,7 +31,6 @@ import com.liaudev.jetstories.di.ViewModelFactory
 import com.liaudev.jetstories.navigation.Screen
 import com.liaudev.jetstories.ui.screen.AboutScreen
 import com.liaudev.jetstories.ui.screen.DetailScreen
-import com.liaudev.jetstories.ui.screen.FavoriteScreen
 import com.liaudev.jetstories.ui.screen.HomeScreen
 import com.liaudev.jetstories.ui.theme.JetStoriesTheme
 import com.liaudev.jetstories.ui.viewmodel.StoryViewModel
@@ -97,10 +96,6 @@ fun JetStoriesApp(
                     navController.navigate(Screen.DetailStory.createRoute(storyId))
                 })
             }
-            composable(Screen.Favorite.route) {
-                stateTitle.value = "Favorite"
-                FavoriteScreen(modifier)
-            }
             composable(Screen.About.route) {
                 stateTitle.value = "About"
                 AboutScreen(modifier)
@@ -111,12 +106,8 @@ fun JetStoriesApp(
             ) {
                 val id = it.arguments?.getString("storyId") ?: ""
                 stateTitle.value = "Detail"
-                DetailScreen(
-                    storyId = id,
-                    navigateBack = {
-                        navController.navigateUp()
-                    }
-                )
+                DetailScreen(storyId = id)
+
             }
         }
     }

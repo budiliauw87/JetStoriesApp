@@ -11,7 +11,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class Story(
-    val photoUrl: String,
+    var photoUrl: String,
     val name: String,
     val createdAt: String,
     val description: String,

@@ -27,7 +27,7 @@ class ViewModelFactory(private val repo: StoryRepository) : ViewModelProvider.Ne
             return SplashViewModel(repo) as T
         } else if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
             return RegisterViewModel(repo) as T
-        }else if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
+        } else if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             return LoginViewModel(repo) as T
         }
 

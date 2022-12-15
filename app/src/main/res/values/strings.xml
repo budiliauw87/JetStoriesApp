@@ -9,4 +9,13 @@
     <string name="already_have_account">Already have account ??</string>
     <string name="register">Register</string>
     <string name="here">Here</string>
+    <string name="my_name">Budiman</string>
+    <string name="my_headline">Android Developer</string>
+    <string name="my_join_year">Bergabung 2019</string>
+    <string name="my_city">Jakarta Barat</string>
+    <string name="about_me">Hai, terima kasih telah berkunjung\nSaya terbiasa membuat / mendevelop aplikasi Android mengunakan bahasa pemograman Java dan untuk saat ini masih beradaptasi ke Kotlin. Dalam menrancang Restful API, mengunakan bahasa pemograman PHP dan Node js.</string>
+    <string name="contact">Kontak saya</string>
+    <string name="my_phone">+6282111153753</string>
+    <string name="my_email">budiliauw87@gmail.com</string>
+    <string name="my_github">budiliauw87.github.io</string>
 </resources>

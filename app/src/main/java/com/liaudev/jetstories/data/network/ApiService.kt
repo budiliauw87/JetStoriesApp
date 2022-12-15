@@ -16,6 +16,12 @@ interface ApiService {
         @Query("size") size: Int
     ): StoryResponse
 
+    @GET("/stories/{id}")
+    suspend fun getDetail(
+        @Path("id") id: String,
+        @Header("Authorization") token: String,
+    ): DetailResponse
+
     @POST("login")
     suspend fun loginUser(
         @Body request: LoginRequest

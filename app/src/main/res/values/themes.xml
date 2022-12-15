@@ -5,9 +5,11 @@
     </style>
 
     <style name="SplashScreenTheme" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/purple_200</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/purple_200</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_splash_story</item>
         <item name="windowSplashScreenAnimationDuration">1000</item>
         <item name="postSplashScreenTheme">@style/Theme.JetStories</item>
     </style>
+
 </resources>

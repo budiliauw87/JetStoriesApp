@@ -8,10 +8,9 @@ package com.liaudev.jetstories.navigation
  */
 sealed class Screen(val route: String) {
     object Home : Screen("home")
-    object Favorite : Screen("favorite")
     object About : Screen("about")
-    object DetailStory : Screen("home/{storyId}") {
-        fun createRoute(storyId: String) = "home/$storyId"
+    object DetailStory : Screen("detail/storyId={storyId}") {
+        fun createRoute(storyId: String) = "detail/storyId=$storyId"
     }
 
     object Login : Screen("login")

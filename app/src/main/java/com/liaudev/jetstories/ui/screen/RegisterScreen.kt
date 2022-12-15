@@ -32,7 +32,7 @@ import com.liaudev.jetstories.data.network.response.BaseResponse
 import com.liaudev.jetstories.di.Injector
 import com.liaudev.jetstories.di.ViewModelFactory
 import com.liaudev.jetstories.state.UiState
-import com.liaudev.jetstories.ui.viewmodel.AuthViewModel
+import com.liaudev.jetstories.ui.viewmodel.RegisterViewModel
 
 
 /**
@@ -44,7 +44,9 @@ import com.liaudev.jetstories.ui.viewmodel.AuthViewModel
 @Composable
 fun RegisterScreen(
     navController: NavHostController,
-    viewModel: AuthViewModel
+    viewModel: RegisterViewModel = viewModel(
+        factory = ViewModelFactory(Injector.provideRepository(LocalContext.current))
+    )
 ) {
     val mContext = LocalContext.current as Activity
     viewModel.uiStateRegister.collectAsState().value.let { uiState ->
@@ -71,7 +73,7 @@ fun RegisterScreen(
 
 @Composable
 fun RegisterContent(
-    viewModel: AuthViewModel,
+    viewModel: RegisterViewModel,
     uiState: UiState<BaseResponse>,
     navController: NavHostController,
 ) {
@@ -85,12 +87,12 @@ fun RegisterContent(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
-    when (uiState) {
+    isLoading = when (uiState) {
         is UiState.Loading -> {
-            isLoading = true
+            true
         }
         else -> {
-            isLoading = false
+            false
         }
     }
     Column(
@@ -115,7 +117,7 @@ fun RegisterContent(
 
             onValueChange = {
                 nameText = it
-                isErrorName = nameText.length == 0
+                isErrorName = nameText.isEmpty()
             },
             label = { Text(text = "Username") },
             singleLine = true,
@@ -137,7 +139,7 @@ fun RegisterContent(
 
             onValueChange = {
                 emailText = it
-                isErrorEmail = emailText.length == 0
+                isErrorEmail = emailText.isEmpty()
             },
             label = { Text(text = "Email") },
             singleLine = true,
@@ -160,7 +162,7 @@ fun RegisterContent(
             isError = isErrorPassword,
             onValueChange = {
                 passwordText = it
-                isErrorPassword = passwordText.length == 0
+                isErrorPassword = passwordText.isEmpty()
             },
             label = { Text(text = "Kata sandi") },
             placeholder = { Text(text = "Masukan Kata sandi") },
@@ -177,9 +179,10 @@ fun RegisterContent(
                 .padding(top = 16.dp),
             enabled = !isLoading,
             onClick = {
-                isErrorPassword = passwordText.length == 0
-                isErrorEmail = emailText.length == 0
-                if (!isErrorEmail && !isErrorPassword) {
+                isErrorPassword = passwordText.isEmpty()
+                isErrorEmail = emailText.isEmpty()
+                isErrorName = nameText.isEmpty()
+                if (!isErrorEmail && !isErrorPassword && !isErrorName) {
                     focusManager.clearFocus()  //clear focus
                     viewModel.register(nameText, emailText, passwordText)
                 }

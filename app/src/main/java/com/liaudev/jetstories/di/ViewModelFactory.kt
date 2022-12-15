@@ -9,8 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.liaudev.jetstories.data.StoryRepository
 import com.liaudev.jetstories.data.local.AppPreferences
 import com.liaudev.jetstories.data.network.ApiConfig
-import com.liaudev.jetstories.ui.viewmodel.AuthViewModel
-import com.liaudev.jetstories.ui.viewmodel.StoryViewModel
+import com.liaudev.jetstories.ui.viewmodel.*
 
 /**
  * Created by Budiman on 09/12/2022.
@@ -24,9 +23,14 @@ class ViewModelFactory(private val repo: StoryRepository) : ViewModelProvider.Ne
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StoryViewModel::class.java)) {
             return StoryViewModel(repo) as T
-        } else if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
-            return AuthViewModel(repo) as T
+        } else if (modelClass.isAssignableFrom(SplashViewModel::class.java)) {
+            return SplashViewModel(repo) as T
+        } else if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
+            return RegisterViewModel(repo) as T
+        }else if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
+            return LoginViewModel(repo) as T
         }
+
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
 

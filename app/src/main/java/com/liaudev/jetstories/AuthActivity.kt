@@ -7,20 +7,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.liaudev.jetstories.di.Injector
-import com.liaudev.jetstories.di.ViewModelFactory
 import com.liaudev.jetstories.navigation.Screen
-import com.liaudev.jetstories.ui.screen.FavoriteScreen
 import com.liaudev.jetstories.ui.screen.LoginScreen
 import com.liaudev.jetstories.ui.screen.RegisterScreen
 import com.liaudev.jetstories.ui.theme.JetStoriesTheme
-import com.liaudev.jetstories.ui.viewmodel.AuthViewModel
 
 /**
  * Created by Budiman on 12/12/2022.
@@ -42,13 +36,6 @@ class AuthActivity : ComponentActivity() {
 fun JetAuthApp(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    viewModel: AuthViewModel = viewModel(
-        factory = ViewModelFactory(
-            Injector.provideRepository(
-                LocalContext.current
-            )
-        )
-    )
 ) {
     Scaffold(modifier = modifier) {
         NavHost(
@@ -57,11 +44,11 @@ fun JetAuthApp(
             modifier = Modifier.padding(it)
         ) {
             composable(Screen.Login.route) {
-                LoginScreen(navController,viewModel)
+                LoginScreen(navController)
 
             }
             composable(Screen.Register.route) {
-                RegisterScreen(navController,viewModel)
+                RegisterScreen(navController)
             }
         }
     }

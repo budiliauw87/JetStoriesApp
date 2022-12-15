@@ -33,7 +33,7 @@ import com.liaudev.jetstories.di.Injector
 import com.liaudev.jetstories.di.ViewModelFactory
 import com.liaudev.jetstories.navigation.Screen
 import com.liaudev.jetstories.state.UiState
-import com.liaudev.jetstories.ui.viewmodel.AuthViewModel
+import com.liaudev.jetstories.ui.viewmodel.LoginViewModel
 
 
 /**
@@ -44,7 +44,9 @@ import com.liaudev.jetstories.ui.viewmodel.AuthViewModel
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-    viewModel: AuthViewModel
+    viewModel: LoginViewModel = viewModel(
+        factory = ViewModelFactory(Injector.provideRepository(LocalContext.current))
+    )
 ) {
 
     val mContext = LocalContext.current as Activity
@@ -73,7 +75,7 @@ fun LoginScreen(
 
 @Composable
 fun LoginContent(
-    viewModel: AuthViewModel,
+    viewModel: LoginViewModel,
     uiState: UiState<LoginResponse>,
     navController: NavHostController,
 ) {
@@ -84,12 +86,12 @@ fun LoginContent(
     var isLoading by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
-    when (uiState) {
+    isLoading = when (uiState) {
         is UiState.Loading -> {
-            isLoading = true
+            true
         }
         else -> {
-            isLoading = false
+            false
         }
     }
     Column(
@@ -127,7 +129,7 @@ fun LoginContent(
 
             onValueChange = {
                 emailText = it
-                isErrorEmail = emailText.length == 0
+                isErrorEmail = emailText.isEmpty()
             },
             label = { Text(text = "Email") },
             singleLine = true,
@@ -150,7 +152,7 @@ fun LoginContent(
             isError = isErrorPassword,
             onValueChange = {
                 passwordText = it
-                isErrorPassword = passwordText.length == 0
+                isErrorPassword = passwordText.isEmpty()
             },
             label = { Text(text = "Kata sandi") },
             placeholder = { Text(text = "Masukan Kata sandi") },
@@ -167,8 +169,8 @@ fun LoginContent(
                 .padding(top = 16.dp),
             enabled = !isLoading,
             onClick = {
-                isErrorPassword = passwordText.length == 0
-                isErrorEmail = emailText.length == 0
+                isErrorPassword = passwordText.isEmpty()
+                isErrorEmail = emailText.isEmpty()
                 if (!isErrorEmail && !isErrorPassword) {
                     focusManager.clearFocus()  //clear focus
                     viewModel.login(emailText, passwordText)

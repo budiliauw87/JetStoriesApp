@@ -25,7 +25,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.google.gson.Gson
 import com.liaudev.jetstories.components.BottomBar
 import com.liaudev.jetstories.di.Injector
 import com.liaudev.jetstories.di.ViewModelFactory

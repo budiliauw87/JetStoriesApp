@@ -8,8 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.liaudev.jetstories.di.ViewModelFactory
-import com.liaudev.jetstories.ui.viewmodel.AuthViewModel
-import com.liaudev.jetstories.ui.viewmodel.StoryViewModel
+import com.liaudev.jetstories.ui.viewmodel.SplashViewModel
 
 /**
  * Created by Budiman on 30/11/2022.
@@ -18,7 +17,7 @@ import com.liaudev.jetstories.ui.viewmodel.StoryViewModel
  */
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : ComponentActivity() {
-    private val viewModel by viewModels<AuthViewModel> {
+    private val viewModel by viewModels<SplashViewModel> {
         ViewModelFactory.getInstance(this)
     }
     var keepSplashOnScreen = true
